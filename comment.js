@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                               comment_block_html_1 +
                                                               "'comment_block_" + i + "'" +
                                                               comment_block_html_2 +
-                                                              current_comments[i] +
+                                                              new_comment +
                                                               comment_block_html_3 +
                                                               "'delete_comment_" + i + "'" +
                                                               comment_block_html_4;
