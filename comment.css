@@ -1,0 +1,58 @@
+.comment_block{
+	padding-top: 5px;
+}
+
+.delete_button{
+	background-color: #ffffff00;
+	border: 0px;
+	float: right;
+}
+
+.delete_button:hover{
+	color: red;
+	cursor: pointer;
+}
+
+#container {
+	display: flex;
+	margin-top: 10px;
+}
+
+#comment_button {
+	background: #39a7c5;
+    border: 0px;
+    color: white;
+    margin-left: 5px;
+    box-shadow: 0px 1px 3px 0px gray;
+	cursor: pointer;
+}
+
+body {
+	background-color: #f9f9f9;
+	font-family: roboto;
+	font-size: 15px;
+	width: 300px;
+	margin: 0px
+}
+
+#comment_text {
+	box-shadow: 0px 1px 3px 0px gray;
+    border: 1px solid white;
+    width: 275px;
+    height: 20px;
+}
+
+#content{
+	margin: 8px
+}
+
+#topbar{
+	background-color: #39a7c5;
+    padding-left: 10px;
+    border: 1px solid #39a7c5;
+}
+
+#header{
+	color: white;
+	margin: 10px;
+}

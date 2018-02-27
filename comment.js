@@ -2,8 +2,8 @@
 //it is possible to dynamically construct the unique html code each comment requires
 var comment_block_html_1 = "<div class='comment_block' id=";
 var comment_block_html_2 = "'><span class='comment_text'>";
-var comment_block_html_3 = "</span><button id=";
-var comment_block_html_4 = ">Delete</button></div>";
+var comment_block_html_3 = "</span><button class ='delete_button' title='delete comment' id=";
+var comment_block_html_4 = ">x</button></div>";
 
 function getUrl(callback) {
   var request = {currentWindow: true, active: true};
