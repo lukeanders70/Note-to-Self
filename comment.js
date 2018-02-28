@@ -1,13 +1,7 @@
 //The HTML needed to inject for each comment. By splitting it up into start, middle end
 //it is possible to dynamically construct the unique html code each comment requires
 
-
-//problem: when I replace the innerHTML, I'm changing the element and, in so doing, removing my eventlisteners
-
-var comment_block_html_1 = "<div class='comment_block' id=";
-var comment_block_html_2 = "'><span class='comment_text'>";
-var comment_block_html_3 = "</span><button class ='delete_button' title='delete comment' id=";
-var comment_block_html_4 = ">x</button></div>";
+var already_deleted = [];
 
 function getUrl(callback) {
   var request = {currentWindow: true, active: true};
@@ -57,10 +51,17 @@ function loadCurrentComments(url){
 function deleteCommentFunction(i, current_comments, url, callback){
   var delete_i = function(){
     document.getElementById("comment_block_" + i.toString()).remove();
-    current_comments.splice(i, 1);
+    offset = 0;
+    for(j = 0; j < already_deleted.length; j++){
+      if(already_deleted[j] < i){
+        offset += 1;
+      }
+    }
+    current_comments.splice(i - offset, 1);
     var comments_for_storage = {};
     comments_for_storage[url] = current_comments;
     chrome.storage.sync.set(comments_for_storage);
+    already_deleted.push(i);
   }
   callback(delete_i)
 }
