@@ -15,7 +15,7 @@
 
 #container {
 	display: flex;
-	margin-top: 10px;
+	margin: 10px;
 }
 
 #comment_button {
@@ -44,17 +44,21 @@ body {
 	font-size: 15px;
 }
 
-#content{
+.content{
 	margin: 8px
 }
 
-#topbar{
+.topbar{
 	background-color: #39a7c5;
     padding-left: 10px;
     border: 1px solid #39a7c5;
 }
 
-#header{
+.header{
 	color: white;
 	margin: 10px;
+}
+
+#domain_comments_tab{
+	display: none;
 }
