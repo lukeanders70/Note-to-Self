@@ -1,5 +1,4 @@
-//The HTML needed to inject for each comment. By splitting it up into start, middle end
-//it is possible to dynamically construct the unique html code each comment requires
+
 
 var already_deleted = [];
 

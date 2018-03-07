@@ -1,5 +1,3 @@
-//The HTML needed to inject for each comment. By splitting it up into start, middle end
-//it is possible to dynamically construct the unique html code each comment requires
 
 var already_deleted = [];
 
@@ -22,7 +20,7 @@ function getDomain(url, callback) {
 
 function getCurrentComments(url, domain, callback){
     chrome.storage.sync.get([url, domain], (comments) => {
-        callback(chrome.runtime.lastError ? null : [comments[url], comments[domain]])
+        callback(chrome.runtime.lastError ? null : [comments[domain], comments[domain][url]])
     });
 }
 
@@ -110,37 +108,24 @@ document.addEventListener('DOMContentLoaded', () => {
         loadCurrentComments(url, domain);
 
         getCurrentComments(url, domain, (all_comments) => {
-            current_comments = all_comments[0];
-            current_comments_domain = all_comments[1];
+            old_domain_comments = all_comments[0]
+            current_comments = all_comments[1]
             document.getElementById("comment_button").addEventListener("click", function(){
                 var new_comment = document.getElementById('comment_text').value;
 
-                if (current_comments === undefined || current_comments.length == 0){
+                if (current_comments == undefined || current_comments.length == 0){
                     current_comments = [new_comment];
                 }
                 else{
                     current_comments.push(new_comment);
                 }
-                if (current_comments_domain === undefined || current_comments_domain.length == 0){
-                    current_comments_domain = [new_comment];
-                }
-                else{
-                    current_comments_domain.push(new_comment);
-                }
 
                 //store comments for this URL as list in local memory
                 var comments_for_storage = {};
-                comments_for_storage[url] = current_comments;
-                comments_for_storage[domain] = current_comments_domain;
-                console.log(comments_for_storage);
+                comments_for_storage[domain] = old_domain_comments;
+                comments_for_storage[domain][url] = current_comments;
                 chrome.storage.sync.set(comments_for_storage);
 
-
-                deleteCommentFunction(j, current_comments, url, (deleteFunction) => {
-                    document.getElementById("delete_comment_" + j.toString()).addEventListener("click", deleteFunction);
-                    document.getElementById('comment_text').value = "";
-                });
-            });
 
             for (i = 0; i < current_comments.length; i++){
                 //setting listeners for delete buttons
@@ -163,3 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
+// Page Loaded
+     // Get Current comments
+        // Display comments and set listeners for comments
+        // Add New Comment listener
+            // Add Comment to database
+                //Display comments and set listener for comments
