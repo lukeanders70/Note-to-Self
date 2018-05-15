@@ -107,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadCurrentComments(url, domain);
 
+        document.get
+
         getCurrentComments(url, domain, (all_comments) => {
             old_domain_comments = all_comments[0]
             current_comments = all_comments[1]
