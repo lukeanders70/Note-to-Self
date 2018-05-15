@@ -46,15 +46,24 @@ var load_comment = function(comment, i){
 
 var load_current_comments = function(){
 
+    document.getElementById("current_comments_domain").innerHTML = "";
+    document.getElementById("url_comments_domain").innerHTML = "";
+
     current_comments = get_current_comments();
 
-    for (i = 0; i < current_comments["domain"].length; i++){
+    for (var i = 0; i < current_comments["domain"].length; i++){
         load_comment(current_comments["domain"][i], i);
+        delete_function = delete_comment_function(i)
+        document.getElementById("delete_comment_" + i.toString()).addEventListener("click", delete_function);
     }
 
-    for (i = 0; i < current_comments["url"].length; i++){
+    for (var i = current_comments["domain"].length; i < current_comments["url"].length + current_comments["domain"].length; i++){
         load_comment(current_comments["url"][i], i);
+        delete_function = delete_comment_function(i);
+        document.getElementById("delete_comment_" + i.toString()).addEventListener("click", delete_function);
+
     }
+
 }
 
 var add_comment_url = function(){
@@ -76,6 +85,22 @@ var add_comment_url = function(){
     document.getElementById('comment_text').value = ""; //remove text from input box    
 }
 
+var delete_comment_function = function(i){
+
+    var delete_i = function(){
+        document.getElementById("comment_block_" + i.toString()).remove();
+
+        current_comments.splice(i,1);
+        var comments_for_storage = {};
+        comments_for_storage[url] = current_comments;
+        chrome.storage.sync.set(comments_for_storage);
+
+        load_current_comments();
+    }
+
+    return delete_i;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     getUrl((new_url, new_domain)=>{
         url = new_url;
@@ -83,5 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         load_current_comments();
 
         document.getElementById("comment_button").addEventListener("click", add_comment)
+
     });
 });
