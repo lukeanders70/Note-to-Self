@@ -1,26 +1,47 @@
 
 // GLOBALS
-var current_comments = {};
+var current_comments = {"domain":[], "url":[]};
 var url = "";
 var domain = "";
 
+function getDomain(url, callback) {
+  console.log(url.split("://")[1].split("/")[0]);
+  callback(url.split("://")[1].split("/")[0]);
+}
+
+function getUrl(callback) {
+  var request = {currentWindow: true, active: true};
+
+  chrome.tabs.query(request, (result) => {
+    var tab = result[0];
+    var current_url = tab.url;
+    getDomain(current_url, (domain) => {
+      callback(current_url, domain);
+    });
+  });
+}
+
 var get_current_comments = function(){
-    var all_comments = {};
 
     //get domain comments
     chrome.storage.sync.get(domain, (comments) => {
-        callback(chrome.runtime.lastError ? null : all_comments["domain"] = comments);
+        if(comments[domain] != null){
+            current_comments["domain"] = comments[domain];
+        }
     });
 
     //get url comments
-    chrome.storage.sync.get(url, (url) => {
-        callback(chrome.runtime.lastError ? null : all_comments["url"] = comments);
+    chrome.storage.sync.get(url, (comments) => {
+        if(comments[url] != null){
+            current_comments["url"] = comments[url];
+        }
     });
 
-    return all_comments;
+
+    return current_comments;
 }
 
-var load_comment = function(comment, i){
+var load_comment = function(comment, i, comment_type){
     var new_div = document.createElement('div');
     new_div.setAttribute("id", "comment_block_" + i);
     new_div.setAttribute("class", "comment_block");
@@ -41,26 +62,30 @@ var load_comment = function(comment, i){
     new_div.appendChild(new_span);
     new_div.appendChild(new_button);
 
-    document.getElementById("current_comments").appendChild(new_div);
+    document.getElementById("current_comments_" + comment_type).appendChild(new_div);
 }
 
 var load_current_comments = function(){
 
     document.getElementById("current_comments_domain").innerHTML = "";
-    document.getElementById("url_comments_domain").innerHTML = "";
+    document.getElementById("current_comments_url").innerHTML = "";
 
     current_comments = get_current_comments();
+    console.log(current_comments)
+    console.log(current_comments["url"])
+    console.log(current_comments["url"].length);
 
     for (var i = 0; i < current_comments["domain"].length; i++){
-        load_comment(current_comments["domain"][i], i);
+        load_comment(current_comments["domain"][i], i, "domain");
         delete_function = delete_comment_function(i)
         document.getElementById("delete_comment_" + i.toString()).addEventListener("click", delete_function);
     }
 
-    for (var i = current_comments["domain"].length; i < current_comments["url"].length + current_comments["domain"].length; i++){
-        load_comment(current_comments["url"][i], i);
+    for (var i = 0; i < current_comments["url"].length; i++){
+        console.log(i)
+        load_comment(current_comments["url"][i], i + current_comments["domain"].length, "url");
         delete_function = delete_comment_function(i);
-        document.getElementById("delete_comment_" + i.toString()).addEventListener("click", delete_function);
+        document.getElementById("delete_comment_" + (i + current_comments["domain"].length).toString()).addEventListener("click", delete_function);
 
     }
 
@@ -107,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         domain = new_domain;
         load_current_comments();
 
-        document.getElementById("comment_button").addEventListener("click", add_comment)
+        document.getElementById("comment_button").addEventListener("click", add_comment_url)
 
     });
 });
