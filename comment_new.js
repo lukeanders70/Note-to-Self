@@ -110,11 +110,11 @@ var add_comment_url = function(){
 var delete_comment_function = function(i){
 
     var delete_i = function(){
-        document.getElementById("comment_block_" + i.toString()).remove();
+        //document.getElementById("comment_block_" + i.toString()).remove();
 
-        current_comments.splice(i,1);
+        current_comments["url"].splice(i,1);
         var comments_for_storage = {};
-        comments_for_storage[url] = current_comments;
+        comments_for_storage[url] = current_comments["url"];
         chrome.storage.sync.set(comments_for_storage);
 
         load_current_comments();
