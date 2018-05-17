@@ -5,7 +5,6 @@ var url = "";
 var domain = "";
 
 function getDomain(url, callback) {
-  console.log(url.split("://")[1].split("/")[0]);
   callback(url.split("://")[1].split("/")[0]);
 }
 
@@ -76,7 +75,7 @@ var load_current_comments = function(){
             }
             else{
                 load_comment(current_comments["domain"][i], i, "domain");
-                delete_function = delete_comment_function(i)
+                delete_function = delete_comment_function(i, "domain")
                 document.getElementById("delete_comment_domain_" + i.toString()).addEventListener("click", delete_function);
             }
         }
@@ -90,7 +89,7 @@ var load_current_comments = function(){
             }
             else{
                 load_comment(current_comments["url"][i], i, "url");
-                delete_function = delete_comment_function(i)
+                delete_function = delete_comment_function(i, "url")
                 document.getElementById("delete_comment_url_" + i.toString()).addEventListener("click", delete_function);
             }
         }
@@ -119,14 +118,35 @@ var add_comment_url = function(){
     document.getElementById('comment_text').value = ""; //remove text from input box    
 }
 
-var delete_comment_function = function(i){
+var add_comment_domain = function(){
+    var new_comment = document.getElementById('comment_text').value;
+
+    if (current_comments["domain"] === undefined || current_comments["domain"].length == 0){
+      current_comments["domain"] = [new_comment];
+    }
+    else{
+      current_comments["domain"].push(new_comment);
+    }
+
+    var comments_for_storage = {};
+    comments_for_storage[domain] = current_comments["domain"];
+    chrome.storage.sync.set(comments_for_storage);
+
+    load_current_comments(); //reload the comments now that we've added one
+
+    document.getElementById('comment_text').value = ""; //remove text from input box    
+}
+
+
+var delete_comment_function = function(i, comment_type){
 
     var delete_i = function(){
         //document.getElementById("comment_block_" + i.toString()).remove();
-
-        current_comments["url"].splice(i,1);
+        current_comments[comment_type].splice(i,1);
         var comments_for_storage = {};
-        comments_for_storage[url] = current_comments["url"];
+        if(comment_type == "url") comments_for_storage[url] = current_comments[comment_type];
+        if(comment_type == "domain") comments_for_storage[domain] = current_comments[comment_type];
+
         chrome.storage.sync.set(comments_for_storage);
 
         load_current_comments();
@@ -135,13 +155,30 @@ var delete_comment_function = function(i){
     return delete_i;
 };
 
+var switch_to_url = function(){
+    document.getElementById("domain_comments_tab").style.display = "none";
+    document.getElementById("url_comments_tab").style.display = "block";
+
+    document.getElementById("comment_button").removeEventListener("click", add_comment_domain);
+    document.getElementById("comment_button").addEventListener("click", add_comment_url);
+}
+
+var switch_to_domain = function(){
+    document.getElementById("url_comments_tab").style.display = "none";
+    document.getElementById("domain_comments_tab").style.display = "block";
+
+    document.getElementById("comment_button").removeEventListener("click", add_comment_url);
+    document.getElementById("comment_button").addEventListener("click", add_comment_domain);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     getUrl((new_url, new_domain)=>{
         url = new_url;
         domain = new_domain;
         load_current_comments();
 
-        document.getElementById("comment_button").addEventListener("click", add_comment_url)
-
+        document.getElementById("comment_button").addEventListener("click", add_comment_url);
+        document.getElementById("url_comments_tab_button").addEventListener("click", switch_to_url);
+        document.getElementById("domain_comments_tab_button").addEventListener("click", switch_to_domain);
     });
 });
