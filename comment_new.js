@@ -156,9 +156,17 @@ var delete_comment_function = function(i, comment_type){
 };
 
 var switch_to_url = function(){
+    //show url comments, hide domain comments
     document.getElementById("domain_comments_tab").style.display = "none";
     document.getElementById("url_comments_tab").style.display = "block";
 
+    //show url tab as active, show domain tab as inactive
+    document.getElementById("domain_comments_tab_button").style.color = "#f1f1f1";
+    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#27788e";
+    document.getElementById("url_comments_tab_button").style.color = "white";
+    document.getElementById("url_comments_tab_button").style.backgroundColor = "#39a7c5";
+
+    //change comment button to post url comments
     document.getElementById("comment_button").removeEventListener("click", add_comment_domain);
     document.getElementById("comment_button").addEventListener("click", add_comment_url);
 }
@@ -166,6 +174,11 @@ var switch_to_url = function(){
 var switch_to_domain = function(){
     document.getElementById("url_comments_tab").style.display = "none";
     document.getElementById("domain_comments_tab").style.display = "block";
+
+    document.getElementById("url_comments_tab_button").style.color = "#f1f1f1";
+    document.getElementById("url_comments_tab_button").style.backgroundColor = "#27788e";
+    document.getElementById("domain_comments_tab_button").style.color = "white";
+    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#39a7c5";
 
     document.getElementById("comment_button").removeEventListener("click", add_comment_url);
     document.getElementById("comment_button").addEventListener("click", add_comment_domain);
