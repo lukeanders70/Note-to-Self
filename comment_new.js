@@ -45,9 +45,17 @@ var load_comment = function(comment, i, comment_type){
     new_div.setAttribute("id", "comment_block_" + comment_type + "_" + i);
     new_div.setAttribute("class", "comment_block");
 
+    var new_div_text = document.createElement('div');
+    new_div_text.setAttribute("id", "comment_text_block_" + comment_type + "_" + i);
+    new_div_text.setAttribute("class", "comment_text_block");
+
     var new_span = document.createElement('span');
     new_span.setAttribute("id", "comment_text_" + comment_type + "_" + i);
     new_span.setAttribute("class", "comment_text");
+
+    var new_div_delete = document.createElement('div');
+    new_div_delete.setAttribute("id", "comment_delete_block_" + comment_type + "_" + i);
+    new_div_delete.setAttribute("class", "comment_delete_block");
 
     var new_button = document.createElement('button');
     new_button.setAttribute("id", "delete_comment_" + comment_type + "_" + i);
@@ -58,9 +66,11 @@ var load_comment = function(comment, i, comment_type){
     var x_text = document.createTextNode("x")
 
     new_span.appendChild(new_text);
-    new_button.appendChild(x_text)
-    new_div.appendChild(new_span);
-    new_div.appendChild(new_button);
+    new_button.appendChild(x_text);
+    new_div_text.appendChild(new_span);
+    new_div_delete.appendChild(new_button);
+    new_div.appendChild(new_div_text);
+    new_div.appendChild(new_div_delete);
 
     document.getElementById("current_comments_" + comment_type).appendChild(new_div);
 }

@@ -1,5 +1,7 @@
 .comment_block{
 	padding-top: 5px;
+	display: inline-block;
+	width: 100%
 }
 
 .tab_button{
@@ -67,6 +69,16 @@ body {
     height: 20px;
 	font-family: roboto;
 	font-size: 15px;
+}
+
+.comment_text_block{
+	float: left;
+	width: 90%;
+}
+
+.comment_delete_block{
+	float: right;
+	width: 9%
 }
 
 #comment_text:hover{
