@@ -189,6 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
         url = new_url;
         domain = new_domain;
         load_current_comments();
+        document.getElementById("domain_header").innerHTML = domain;
+        document.getElementById("url_header").innerHTML = url;
 
         document.getElementById("comment_button").addEventListener("click", add_comment_url);
         document.getElementById("url_comments_tab_button").addEventListener("click", switch_to_url);
