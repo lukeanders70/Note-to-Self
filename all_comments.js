@@ -39,8 +39,8 @@ var load_comment = function(comment, i, comment_type, j){
     new_button.appendChild(x_text);
     new_div_text.appendChild(new_span);
     new_div_delete.appendChild(new_button);
-    new_div.appendChild(new_div_text);
     new_div.appendChild(new_div_delete);
+    new_div.appendChild(new_div_text);
 
     document.getElementById("comment_group_" + comment_type + "_" + j).appendChild(new_div);
 }

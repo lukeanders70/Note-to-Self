@@ -27,6 +27,7 @@
 	background-color: #ffffff00;
 	border: 0px;
 	float: right;
+	font-weight: bold;
 }
 
 .delete_button:hover{
@@ -74,12 +75,12 @@ body {
 
 .comment_text_block{
 	float: left;
-	width: 90%;
+	margin-left: 20px;
+	width: 85%;
 }
 
 .comment_delete_block{
-	float: right;
-	width: 9%
+	float: left;
 }
 
 #comment_text:hover{
