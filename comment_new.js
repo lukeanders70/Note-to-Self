@@ -194,6 +194,8 @@ var switch_to_domain = function(){
     document.getElementById("comment_button").addEventListener("click", add_comment_domain);
 }
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
     getUrl((new_url, new_domain)=>{
         url = new_url;
@@ -205,5 +207,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("comment_button").addEventListener("click", add_comment_url);
         document.getElementById("url_comments_tab_button").addEventListener("click", switch_to_url);
         document.getElementById("domain_comments_tab_button").addEventListener("click", switch_to_domain);
+        document.getElementById("all_comments_button").addEventListener("click", function () {
+            chrome.tabs.create({ url: chrome.runtime.getURL("all_comments.html") });
+        });
     });
 });
