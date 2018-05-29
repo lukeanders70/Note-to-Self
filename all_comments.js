@@ -74,7 +74,9 @@ var load_current_comments = function(){
 
     get_current_comments(function(){
 
-        console.log(current_comments);
+        console.log("here")
+
+        document.getElementById("current_comments_url").innerHTML = "";
 
         var keys = Object.keys(current_comments)
 
@@ -89,7 +91,7 @@ var load_current_comments = function(){
                 comment = comments[j];
                 load_comment(comment, j, comment_type, i);
                 delete_function = delete_comment_function(j, "domain", key);
-                document.getElementById("comment_text_" + comment_type + "_" + i + "_" + j).addEventListener("click", delete_function);
+                document.getElementById("delete_comment_" + comment_type + "_" + i + "_" + j).addEventListener("click", delete_function);
             }
         }
     });
@@ -100,7 +102,9 @@ var delete_comment_function = function(comment_num, comment_type, key){
     var delete_i = function(){
         current_comments[key].splice(comment_num,1);
 
-        chrome.storage.sync.set(current_comments[key]);
+        new_comments = {}
+        new_comments[key] = current_comments[key]
+        chrome.storage.sync.set(new_comments);
 
         load_current_comments();
     }
