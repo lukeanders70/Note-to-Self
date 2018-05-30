@@ -77,6 +77,7 @@ var load_current_comments = function(){
         console.log("here")
 
         document.getElementById("current_comments_url").innerHTML = "";
+        document.getElementById("current_comments_domain").innerHTML = "";
 
         var keys = Object.keys(current_comments)
 
