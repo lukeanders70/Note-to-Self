@@ -85,7 +85,12 @@ var load_current_comments = function(){
             let key = keys[i];
             let comment_type = domain_or_url(key);
             let comments = current_comments[key];
-            create_comment_group(i, comment_type, key);
+            if(comments.length  == 0){
+                chrome.storage.sync.remove(key);
+            }
+            else{
+                create_comment_group(i, comment_type, key);
+            }
 
             for(j = 0; j < comments.length; j++){
                 comment = comments[j];
