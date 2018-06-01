@@ -54,9 +54,18 @@ var create_comment_group = function(i, comment_type, url){
     new_span.setAttribute("id", "comment_group_title_" + comment_type + "_" + i);
     new_span.setAttribute("class", "comment_group_title");
 
+    var new_h3 = document.createElement('h3');
+    new_h3.setAttribute("class", "comment_group_h3");
+
+    var new_link = document.createElement('a');
+    new_link.setAttribute("class", "comment_group_link");
+    new_link.setAttribute("href", url);
+
     new_text = document.createTextNode(url);
 
-    new_span.appendChild(new_text);
+    new_span.appendChild(new_h3);
+    new_h3.appendChild(new_link)
+    new_link.appendChild(new_text)
     new_div.appendChild(new_span);
     document.getElementById("current_comments_" + comment_type).appendChild(new_div);
 }
