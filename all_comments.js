@@ -59,7 +59,12 @@ var create_comment_group = function(i, comment_type, url){
 
     var new_link = document.createElement('a');
     new_link.setAttribute("class", "comment_group_link");
-    new_link.setAttribute("href", url);
+    if(comment_type == "url"){
+        new_link.setAttribute("href", url);
+    }
+    else{
+        new_link.setAttribute("href", "https://" + url);
+    }
 
     new_text = document.createTextNode(url);
 
@@ -133,16 +138,16 @@ var switch_to_url = function(){
     document.getElementById("url_comments_tab").style.display = "block";
 
     //show url tab as active, show domain tab as inactive
-    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#545454";
-    document.getElementById("url_comments_tab_button").style.backgroundColor = "#171717";
+    document.getElementById("domain_comments_tab_button").style.color = "#a5a5a5";
+    document.getElementById("url_comments_tab_button").style.color = "black";
 }
 
 var switch_to_domain = function(){
     document.getElementById("url_comments_tab").style.display = "none";
     document.getElementById("domain_comments_tab").style.display = "block";
 
-    document.getElementById("url_comments_tab_button").style.backgroundColor = "#545454";
-    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#171717";
+    document.getElementById("url_comments_tab_button").style.color = "#a5a5a5";
+    document.getElementById("domain_comments_tab_button").style.color = "black";
 
 }
 

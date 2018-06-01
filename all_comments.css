@@ -6,10 +6,12 @@
 
 .tab_button{
 	cursor: pointer;
-	width: 60px;
+	width: 80px;
 	padding: 5px;
 	border: 0px;
-	border-radius: 5px 5px 0px 0px;
+	border-radius: 5px 5px 5px 5px;
+	background-color: transparent;
+	font-size: 19px;
 }
 
 #color_bar{
@@ -18,14 +20,12 @@
 }
 
 #domain_comments_tab_button{
-	background-color: #545454;
-	color: white;
+	color: #a5a5a5;
 
 }
 
 #url_comments_tab_button{
-	background-color: #171717;
-	color: white;
+	color: black;
 }
 
 .delete_button{
