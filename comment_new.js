@@ -171,8 +171,8 @@ var switch_to_url = function(){
     document.getElementById("url_comments_tab").style.display = "block";
 
     //show url tab as active, show domain tab as inactive
-    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#c7c7c7";
-    document.getElementById("url_comments_tab_button").style.backgroundColor = "white";
+    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#545454";
+    document.getElementById("url_comments_tab_button").style.backgroundColor = "#171717";
 
     //change comment button to post url comments
     document.getElementById("comment_button").removeEventListener("click", add_comment_domain);
@@ -183,8 +183,8 @@ var switch_to_domain = function(){
     document.getElementById("url_comments_tab").style.display = "none";
     document.getElementById("domain_comments_tab").style.display = "block";
 
-    document.getElementById("url_comments_tab_button").style.backgroundColor = "#c7c7c7";
-    document.getElementById("domain_comments_tab_button").style.backgroundColor = "white";
+    document.getElementById("url_comments_tab_button").style.backgroundColor = "#545454";
+    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#171717";
 
     document.getElementById("comment_button").removeEventListener("click", add_comment_url);
     document.getElementById("comment_button").addEventListener("click", add_comment_domain);
