@@ -148,3 +148,11 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: white; 
 }
+
+.no_notes_img{
+	height: 120px;
+    display: block;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

@@ -79,6 +79,13 @@ var load_current_comments = function(){
 
     get_current_comments(function(){
 
+        if(document.getElementById("no_notes_img_url")){
+            document.getElementById("no_notes_img_url").remove();
+        }
+        if(document.getElementById("no_notes_img_domain")){
+            document.getElementById("no_notes_img_domain").remove();
+        }
+
         for (var i = 0; i < current_comments["domain"].length; i++){
             if(document.getElementById("comment_text_domain_" + i.toString())){
                 document.getElementById("comment_text_domain_" + i.toString()).innerHTML = current_comments["domain"][i]
@@ -92,7 +99,6 @@ var load_current_comments = function(){
         if(document.getElementById("comment_block_domain_" + (current_comments["domain"].length)) ){
             document.getElementById("comment_block_domain_" + (current_comments["domain"].length)).remove();
         }
-
         for (var i = 0; i < current_comments["url"].length; i++){
             if(document.getElementById("comment_text_url_" + i.toString())){
                 document.getElementById("comment_text_url_" + i.toString()).innerHTML = current_comments["url"][i]
@@ -105,8 +111,26 @@ var load_current_comments = function(){
         }
         if(document.getElementById("comment_block_url_" + (current_comments["url"].length).toString())){
             document.getElementById("comment_block_url_" + (current_comments["url"].length).toString()).remove();
-        }    });
+        }
 
+        if(document.getElementById("current_comments_url").childElementCount == 0){
+            //load 'no notes' image
+            no_notes_img = document.createElement("img");
+            no_notes_img.setAttribute("id", "no_notes_img_url");
+            no_notes_img.setAttribute("class", "no_notes_img");
+            no_notes_img.setAttribute("src", "./no_notes.png");
+            document.getElementById("current_comments_url").appendChild(no_notes_img);
+        }
+        if(document.getElementById("current_comments_domain").childElementCount == 0){
+            //load 'no notes' image
+            no_notes_img = document.createElement("img");
+            no_notes_img.setAttribute("id", "no_notes_img_domain");
+            no_notes_img.setAttribute("class", "no_notes_img");
+            no_notes_img.setAttribute("src", "./no_notes.png");
+            document.getElementById("current_comments_domain").appendChild(no_notes_img);
+        }
+
+    });
 }
 
 var add_comment_url = function(){

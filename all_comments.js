@@ -114,6 +114,23 @@ var load_current_comments = function(){
                 document.getElementById("delete_comment_" + comment_type + "_" + i + "_" + j).addEventListener("click", delete_function);
             }
         }
+
+        if(document.getElementById("current_comments_url").childElementCount == 0){
+            //load 'no notes' image
+            no_notes_img = document.createElement("img");
+            no_notes_img.setAttribute("id", "no_notes_img");
+            no_notes_img.setAttribute("src", "./no_notes.png");
+            document.getElementById("current_comments_url").appendChild(no_notes_img);
+        }
+        if(document.getElementById("current_comments_domain").childElementCount == 0){
+            //load 'no notes' image
+            no_notes_img = document.createElement("img");
+            no_notes_img.setAttribute("id", "no_notes_img");
+            no_notes_img.setAttribute("src", "./no_notes.png");
+            document.getElementById("current_comments_domain").appendChild(no_notes_img);
+        }
+
+
     });
 
 }

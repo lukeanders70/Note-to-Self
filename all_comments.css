@@ -153,3 +153,11 @@ h3::-webkit-scrollbar-thumb:hover {
 	text-decoration: none;
 	color: #126fbf
 }
+
+#no_notes_img{
+	height: 180px;
+    display: block;
+    margin: auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
