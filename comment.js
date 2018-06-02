@@ -1,6 +1,12 @@
 
+// GLOBALS
+var current_comments = {"domain":[], "url":[]};
+var url = "";
+var domain = "";
 
-var already_deleted = [];
+function getDomain(url, callback) {
+  callback(url.split("://")[1].split("/")[0]);
+}
 
 function getUrl(callback) {
   var request = {currentWindow: true, active: true};
@@ -14,197 +20,191 @@ function getUrl(callback) {
   });
 }
 
-function getDomain(url, callback) {
-  console.log(url.split("://")[1].split("/")[0]);
-  callback(url.split("://")[1].split("/")[0]);
+var get_current_comments = function(callback){
+
+
+    //get domain comments
+    chrome.storage.sync.get(domain, (comments) => {
+        if(comments[domain] != null){
+            current_comments["domain"] = comments[domain];
+        }
+
+        //get url comments
+        chrome.storage.sync.get(url, (comments) => {
+            if(comments[url] != null){
+                current_comments["url"] = comments[url];
+            }
+            callback();
+        });
+    });
+
 }
 
-function getCurrentComments(url, domain, callback){
-  chrome.storage.sync.get([url, domain], (comments) => {
-    callback(chrome.runtime.lastError ? null : [comments[url], comments[domain]])
-  });
+var load_comment = function(comment, i, comment_type){
+    var new_div = document.createElement('div');
+    new_div.setAttribute("id", "comment_block_" + comment_type + "_" + i);
+    new_div.setAttribute("class", "comment_block");
+
+    var new_div_text = document.createElement('div');
+    new_div_text.setAttribute("id", "comment_text_block_" + comment_type + "_" + i);
+    new_div_text.setAttribute("class", "comment_text_block");
+
+    var new_span = document.createElement('span');
+    new_span.setAttribute("id", "comment_text_" + comment_type + "_" + i);
+    new_span.setAttribute("class", "comment_text");
+
+    var new_div_delete = document.createElement('div');
+    new_div_delete.setAttribute("id", "comment_delete_block_" + comment_type + "_" + i);
+    new_div_delete.setAttribute("class", "comment_delete_block");
+
+    var new_button = document.createElement('button');
+    new_button.setAttribute("id", "delete_comment_" + comment_type + "_" + i);
+    new_button.setAttribute("class", "delete_button");
+    new_button.setAttribute("title", "delete comment");
+
+    var new_text = document.createTextNode(comment);
+    var x_text = document.createTextNode("x")
+
+    new_span.appendChild(new_text);
+    new_button.appendChild(x_text);
+    new_div_text.appendChild(new_span);
+    new_div_delete.appendChild(new_button);
+    new_div.appendChild(new_div_text);
+    new_div.appendChild(new_div_delete);
+
+    document.getElementById("current_comments_" + comment_type).appendChild(new_div);
 }
 
-function loadCurrentComments(url, domain){
-  getCurrentComments(url, domain, (all_comments) => {
-    current_comments = all_comments[0];
-    current_comments_domain = all_comments[1];
-    var comment;
-    for (i = 0; i < current_comments.length; i++){
-      new_div = document.createElement('div');
-      new_div.setAttribute("id", "comment_block_" + i);
-      new_div.setAttribute("class", "comment_block");
+var load_current_comments = function(){
 
-      new_span = document.createElement('span');
-      new_span.setAttribute("class", "comment_text");
+    get_current_comments(function(){
 
-      new_button = document.createElement('button');
-      new_button.setAttribute("id", "delete_comment_" + i);
-      new_button.setAttribute("class", "delete_button");
-      new_button.setAttribute("title", "delete comment");
+        for (var i = 0; i < current_comments["domain"].length; i++){
+            if(document.getElementById("comment_text_domain_" + i.toString())){
+                document.getElementById("comment_text_domain_" + i.toString()).innerHTML = current_comments["domain"][i]
+            }
+            else{
+                load_comment(current_comments["domain"][i], i, "domain");
+                delete_function = delete_comment_function(i, "domain")
+                document.getElementById("delete_comment_domain_" + i.toString()).addEventListener("click", delete_function);
+            }
+        }
+        if(document.getElementById("comment_block_domain_" + (current_comments["domain"].length)) ){
+            document.getElementById("comment_block_domain_" + (current_comments["domain"].length)).remove();
+        }
 
-      new_text = document.createTextNode(current_comments[i]);
-      x_text = document.createTextNode("x")
+        for (var i = 0; i < current_comments["url"].length; i++){
+            if(document.getElementById("comment_text_url_" + i.toString())){
+                document.getElementById("comment_text_url_" + i.toString()).innerHTML = current_comments["url"][i]
+            }
+            else{
+                load_comment(current_comments["url"][i], i, "url");
+                delete_function = delete_comment_function(i, "url")
+                document.getElementById("delete_comment_url_" + i.toString()).addEventListener("click", delete_function);
+            }
+        }
+        if(document.getElementById("comment_block_url_" + (current_comments["url"].length).toString())){
+            document.getElementById("comment_block_url_" + (current_comments["url"].length).toString()).remove();
+        }    });
 
-      new_span.appendChild(new_text);
-      new_button.appendChild(x_text)
-      new_div.appendChild(new_span);
-      new_div.appendChild(new_button);
-
-      document.getElementById("current_comments").appendChild(new_div);
-    }
-    for (i = 0; i < current_comments_domain.length; i++){
-      new_div = document.createElement('div');
-      new_div.setAttribute("id", "domain_comment_block_" + i);
-      new_div.setAttribute("class", "comment_block");
-
-      new_span = document.createElement('span');
-      new_span.setAttribute("class", "comment_text");
-
-      new_button = document.createElement('button');
-      new_button.setAttribute("id", "delete_domain_comment_" + i);
-      new_button.setAttribute("class", "delete_button");
-      new_button.setAttribute("title", "delete comment");
-
-      new_text = document.createTextNode(current_comments_domain[i]);
-      x_text = document.createTextNode("x")
-
-      new_span.appendChild(new_text);
-      new_button.appendChild(x_text)
-      new_div.appendChild(new_span);
-      new_div.appendChild(new_button);
-
-      document.getElementById("current_comments_domain").appendChild(new_div);
-    }
-  });
 }
 
-function deleteCommentFunction(i, current_comments, url, callback){
-  var delete_i = function(){
-    document.getElementById("comment_block_" + i.toString()).remove();
-    offset = 0;
-    for(j = 0; j < already_deleted.length; j++){
-      if(already_deleted[j] < i){
-        offset += 1;
-      }
+var add_comment_url = function(){
+    var new_comment = document.getElementById('comment_text').value;
+
+    if (current_comments["url"] === undefined || current_comments["url"].length == 0){
+      current_comments["url"] = [new_comment];
     }
-    current_comments.splice(i - offset, 1);
+    else{
+      current_comments["url"].push(new_comment);
+    }
+
     var comments_for_storage = {};
-    comments_for_storage[url] = current_comments;
+    comments_for_storage[url] = current_comments["url"];
     chrome.storage.sync.set(comments_for_storage);
-    already_deleted.push(i);
-  }
-  callback(delete_i)
+
+    load_current_comments(); //reload the comments now that we've added one
+
+    document.getElementById('comment_text').value = ""; //remove text from input box    
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  getUrl((url, domain)=>{
+var add_comment_domain = function(){
+    var new_comment = document.getElementById('comment_text').value;
 
-    loadCurrentComments(url, domain);
+    if (current_comments["domain"] === undefined || current_comments["domain"].length == 0){
+      current_comments["domain"] = [new_comment];
+    }
+    else{
+      current_comments["domain"].push(new_comment);
+    }
 
-    getCurrentComments(url, domain, (all_comments) => {
-      current_comments = all_comments[0];
-      current_comments_domain = all_comments[1];
-      document.getElementById("comment_button").addEventListener("click", function(){
-        var new_comment = document.getElementById('comment_text').value;
+    var comments_for_storage = {};
+    comments_for_storage[domain] = current_comments["domain"];
+    chrome.storage.sync.set(comments_for_storage);
 
-        if (current_comments === undefined || current_comments.length == 0){
-          current_comments = [new_comment];
-        }
-        else{
-          current_comments.push(new_comment);
-        }
-        if (current_comments_domain === undefined || current_comments_domain.length == 0){
-          current_comments_domain = [new_comment];
-        }
-        else{
-          current_comments_domain.push(new_comment);
-        }
+    load_current_comments(); //reload the comments now that we've added one
 
-        //store comments for this URL as list in local memory
+    document.getElementById('comment_text').value = ""; //remove text from input box    
+}
+
+
+var delete_comment_function = function(i, comment_type){
+
+    var delete_i = function(){
+        //document.getElementById("comment_block_" + i.toString()).remove();
+        current_comments[comment_type].splice(i,1);
         var comments_for_storage = {};
-        comments_for_storage[url] = current_comments;
-        comments_for_storage[domain] = current_comments_domain;
-        console.log(comments_for_storage);
+        if(comment_type == "url") comments_for_storage[url] = current_comments[comment_type];
+        if(comment_type == "domain") comments_for_storage[domain] = current_comments[comment_type];
+
         chrome.storage.sync.set(comments_for_storage);
 
-        //this new comment will be the jth comment
-        j = current_comments.length - 1;
+        load_current_comments();
+    }
 
-        //add the newest comment to the display
+    return delete_i;
+};
 
-        new_div = document.createElement('div');
-        new_div.setAttribute("id", "comment_block_" + j);
-        new_div.setAttribute("class", "comment_block");
+var switch_to_url = function(){
+    //show url comments, hide domain comments
+    document.getElementById("domain_comments_tab").style.display = "none";
+    document.getElementById("url_comments_tab").style.display = "block";
 
-        new_span = document.createElement('span');
-        new_span.setAttribute("class", "comment_text");
+    //show url tab as active, show domain tab as inactive
+    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#545454";
+    document.getElementById("url_comments_tab_button").style.backgroundColor = "#171717";
 
-        new_button = document.createElement('button');
-        new_button.setAttribute("id", "delete_comment_" + j);
-        new_button.setAttribute("class", "delete_button");
-        new_button.setAttribute("title", "delete comment");
+    //change comment button to post url comments
+    document.getElementById("comment_button").removeEventListener("click", add_comment_domain);
+    document.getElementById("comment_button").addEventListener("click", add_comment_url);
+}
 
-        new_text = document.createTextNode(new_comment);
-        x_text = document.createTextNode("x")
+var switch_to_domain = function(){
+    document.getElementById("url_comments_tab").style.display = "none";
+    document.getElementById("domain_comments_tab").style.display = "block";
 
-        new_span.appendChild(new_text);
-        new_button.appendChild(x_text)
-        new_div.appendChild(new_span);
-        new_div.appendChild(new_button);
+    document.getElementById("url_comments_tab_button").style.backgroundColor = "#545454";
+    document.getElementById("domain_comments_tab_button").style.backgroundColor = "#171717";
 
-        document.getElementById("current_comments").appendChild(new_div);
+    document.getElementById("comment_button").removeEventListener("click", add_comment_url);
+    document.getElementById("comment_button").addEventListener("click", add_comment_domain);
+}
 
-        //add the newest comment to the display for the domain tab as well
 
-        new_div = document.createElement('div');
-        new_div.setAttribute("id", "domain_comment_block_" + j);
-        new_div.setAttribute("class", "comment_block");
 
-        new_span = document.createElement('span');
-        new_span.setAttribute("class", "comment_text");
+document.addEventListener('DOMContentLoaded', () => {
+    getUrl((new_url, new_domain)=>{
+        url = new_url;
+        domain = new_domain;
+        load_current_comments();
+        document.getElementById("domain_header").innerHTML = domain;
+        document.getElementById("url_header").innerHTML = url;
 
-        new_button = document.createElement('button');
-        new_button.setAttribute("id", "delete_domain_comment_" + j);
-        new_button.setAttribute("class", "delete_button");
-        new_button.setAttribute("title", "delete comment");
-
-        new_text = document.createTextNode(new_comment);
-        x_text = document.createTextNode("x")
-
-        new_span.appendChild(new_text);
-        new_button.appendChild(x_text)
-        new_div.appendChild(new_span);
-        new_div.appendChild(new_button);
-
-        document.getElementById("current_domain_comments").appendChild(new_div);
-
-        //remove text from input box (not done automatically because this is not a submit button)
-
-        deleteCommentFunction(j, current_comments, url, (deleteFunction) => {
-          document.getElementById("delete_comment_" + j.toString()).addEventListener("click", deleteFunction);
-          document.getElementById('comment_text').value = "";
+        document.getElementById("comment_button").addEventListener("click", add_comment_url);
+        document.getElementById("url_comments_tab_button").addEventListener("click", switch_to_url);
+        document.getElementById("domain_comments_tab_button").addEventListener("click", switch_to_domain);
+        document.getElementById("all_comments_button").addEventListener("click", function () {
+            chrome.tabs.create({ url: chrome.runtime.getURL("all_comments.html") });
         });
-      });
-
-      for (i = 0; i < current_comments.length; i++){
-        //setting listeners for delete buttons
-        deleteCommentFunction(i, current_comments, url, (deleteFunction) => {
-          document.getElementById("delete_comment_" + i.toString()).addEventListener("click", deleteFunction);
-          document.getElementById('comment_text').value = "";
-        });
-      }
-
-      document.getElementById("url_comments_tab_button").addEventListener("click", function(){
-        document.getElementById("url_comments_tab").style.display = 'block';
-        document.getElementById("domain_comments_tab").style.display = 'none';
-      });
-
-      document.getElementById("domain_comments_tab_button").addEventListener("click", function(){
-        document.getElementById("url_comments_tab").style.display = 'none';
-        document.getElementById("domain_comments_tab").style.display = 'block';
-      });
     });
-  });
 });
-
